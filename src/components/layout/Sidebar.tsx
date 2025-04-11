@@ -2,27 +2,32 @@
 import React, { useState } from 'react';
 import { LayoutDashboard, Radar, CalendarClock, Wind, Settings, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link, useNavigate } from 'react-router-dom';
 
 type Tab = 'dashboard' | 'radar' | 'forecast' | 'airquality' | 'settings';
 
 interface SidebarProps {
   activeTab: Tab;
-  onTabChange: (tab: Tab) => void;
 }
 
-const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
+const Sidebar = ({ activeTab }: SidebarProps) => {
   const [expanded, setExpanded] = useState(true);
+  const navigate = useNavigate();
 
   const tabs = [
-    { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'radar' as Tab, label: 'Radar', icon: Radar },
-    { id: 'forecast' as Tab, label: 'Forecast', icon: CalendarClock },
-    { id: 'airquality' as Tab, label: 'Air Quality', icon: Wind },
-    { id: 'settings' as Tab, label: 'Settings', icon: Settings },
+    { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard, path: '/' },
+    { id: 'radar' as Tab, label: 'Radar', icon: Radar, path: '/radar' },
+    { id: 'forecast' as Tab, label: 'Forecast', icon: CalendarClock, path: '/forecast' },
+    { id: 'airquality' as Tab, label: 'Air Quality', icon: Wind, path: '/airquality' },
+    { id: 'settings' as Tab, label: 'Settings', icon: Settings, path: '/settings' },
   ];
 
   const toggleSidebar = () => {
     setExpanded(!expanded);
+  };
+
+  const handleTabClick = (tab: Tab, path: string) => {
+    navigate(path);
   };
 
   return (
@@ -50,7 +55,7 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            onClick={() => onTabChange(tab.id)}
+            onClick={() => handleTabClick(tab.id, tab.path)}
             className={cn(
               "w-full flex items-center p-4 transition-all duration-300 group relative overflow-hidden",
               activeTab === tab.id
